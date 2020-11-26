@@ -11,7 +11,7 @@
         AllowsTransparency="True" Background="Transparent"
         MouseDown="Window_MouseDown"
         Title="ZSupport Tool" Height="200" Width="200" ResizeMode="NoResize" MinWidth="200" MinHeight="150" WindowStyle="None" Topmost="True">
-        <Grid>
+    <Grid>
         <Popup Name="Zstart" IsOpen="False" Placement="Absolute" HorizontalOffset="0" VerticalOffset="0" PlacementTarget="{Binding ElementName=ZSupport}">
             <Border BorderBrush="Gray" BorderThickness="1" >
                 <TextBlock Background="White" Padding="6,2,6,2" TextWrapping="Wrap" Name="tbZstart" FontWeight="Bold" />
@@ -104,5 +104,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        <Button x:Name="buttonHelp" Content="Help" HorizontalAlignment="Left" Margin="152,120,0,0" VerticalAlignment="Top" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="buttonHelp_Click"/>
     </Grid>
 </Window>

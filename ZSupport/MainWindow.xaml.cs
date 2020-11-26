@@ -346,6 +346,11 @@ namespace ZSupport
                     }));
                 }
             }
+            else
+            {
+                isFirstClick = true;
+                Zstart.IsOpen = false;
+            }
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -418,6 +423,11 @@ namespace ZSupport
         {
             Vertical, // |
             Horizontal // ——
+        }
+
+        private void buttonHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/rubyon/zsupport/blob/main/README.md");
         }
     }
 }

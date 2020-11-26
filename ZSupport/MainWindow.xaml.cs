@@ -191,7 +191,6 @@ namespace ZSupport
                 {
                     isFirstClick = true;
                     this.Zstart.IsOpen = false;
-
                 }
                 if (e.KeyData == Keys.X)
                 {
@@ -201,6 +200,15 @@ namespace ZSupport
                 if (e.KeyData == Keys.C)
                 {
                     interval.Text = (int.Parse(interval.Text) + 1).ToString();
+                }
+                if (e.KeyData == Keys.S)
+                {
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        inputSimulator.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LMENU);
+                        inputSimulator.Mouse.LeftButtonClick();
+                        inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
+                    }));
                 }
                 if (isPlaying == false)
                 {

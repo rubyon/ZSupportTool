@@ -202,12 +202,14 @@ namespace ZSupport
                 }
                 if (e.KeyData == Keys.X)
                 {
-                    if (int.Parse(interval.Text) != 0)
-                        interval.Text = (int.Parse(interval.Text) - 1).ToString();
+                    interval.Text = (int.Parse(interval.Text) - 1).ToString();
+                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
                 }
                 if (e.KeyData == Keys.C)
                 {
                     interval.Text = (int.Parse(interval.Text) + 1).ToString();
+                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
+
                 }
                 if (e.KeyData == Keys.S)
                 {
@@ -355,7 +357,7 @@ namespace ZSupport
             double realY = PixelsToPoints((int)pos.Y, LengthDirection.Vertical);
             this.Zstart.HorizontalOffset = realX + 12;
             this.Zstart.VerticalOffset = realY + 12;
-            tbZstart.Text = Strings.ESC;
+            tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString() , Strings.ESC);
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)

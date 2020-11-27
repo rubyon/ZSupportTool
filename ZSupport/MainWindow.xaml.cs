@@ -13,6 +13,10 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using WindowsHook;
 using WindowsInput;
+using ZSupport.Properties;
+using System.Globalization;
+
+
 using Application = System.Windows.Application;
 using KeyEventArgs = WindowsHook.KeyEventArgs;
 using KeyPressEventArgs = WindowsHook.KeyPressEventArgs;
@@ -117,7 +121,7 @@ namespace ZSupport
 
             // 프로그램 버전 표시
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            labelVersion.Content = String.Format("Version. {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            labelVersion.Content = String.Format("{0}. {1}.{2}.{3}.{4}", Strings.version, version.Major, version.Minor, version.Build, version.Revision);
         }
 
         // 직선방정식 함수 시작
@@ -220,7 +224,7 @@ namespace ZSupport
                         this.Zstart.IsOpen = true;
                         isFirstClick = false;
                         Console.WriteLine("Start " + string.Format("x={0:0000}; y={1:0000}\n", pos.X, pos.Y));
-                        labelStart.Content = "Press 'Z' key at\nthe end position";
+                        labelStart.Content = Strings.Zend;
                         x1 = pos.X;
                         y1 = pos.Y;
                     }
@@ -285,7 +289,7 @@ namespace ZSupport
                                 isFirstClick = true;
                             }));
                         }
-                        labelStart.Content = "Press 'Z' key at\nthe start position";
+                        labelStart.Content = Strings.Zstart;
                     }
                 }
             }
@@ -329,7 +333,7 @@ namespace ZSupport
             double realY = PixelsToPoints((int)pos.Y, LengthDirection.Vertical);
             this.Zstart.HorizontalOffset = realX + 12;
             this.Zstart.VerticalOffset = realY + 12;
-            tbZstart.Text = "ZSupport Started! Cancel 'ESC'";
+            tbZstart.Text = Strings.ESC;
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -427,7 +431,7 @@ namespace ZSupport
 
         private void buttonHelp_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/rubyon/zsupport/blob/main/README.md");
+            Process.Start(String.Format("https://github.com/rubyon/zsupport/blob/main/{0}.md", Strings.readme));
         }
     }
 }

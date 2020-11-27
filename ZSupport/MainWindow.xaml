@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ZSupport"
+        xmlns:prop="clr-namespace:ZSupport.Properties"
         mc:Ignorable="d"
         Closing="Window_Exit"
         Icon="icon.ico"
@@ -73,9 +74,9 @@
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top">
             <xctk:IntegerUpDown x:Name="interval" Value="10" Margin="0,50,10,0" Width="50" Background="#FF474747" Foreground="White" BorderBrush="#FF3D3D3D" Minimum="0" Maximum="500" />
         </StackPanel>
-        <Label x:Name="labelStart" Content="Press 'Z' key at&#10;the start position" Margin="30,78,30,0" HorizontalContentAlignment="Center" FontWeight="Bold" Height="50" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FFFFC425" FontSize="15"/>
-        <Label Content="Decrease[-] &quot;X&quot; / Increase[+] &quot;C&quot;" HorizontalAlignment="Left" Margin="5,50,0,0" FontWeight="Bold" FontSize="7.5" Foreground="#FF00AEDB" Width="135" Height="22" VerticalAlignment="Top" />
-        <Label x:Name="labelVersion" Content="Version" HorizontalAlignment="Left" Margin="66,24,0,0" VerticalAlignment="Top" FontSize="10" Foreground="White"/>
+        <Label x:Name="labelStart" Content="{x:Static prop:Strings.Zstart}" Margin="30,78,30,0" HorizontalContentAlignment="Center" FontWeight="Bold" Height="50" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FFFFC425" FontSize="14"/>
+        <Label Content="{x:Static prop:Strings.support_plus_minus}" HorizontalAlignment="Left" Margin="5,50,0,0" FontWeight="Bold" FontSize="7.5" Foreground="#FF00AEDB" Width="135" Height="22" VerticalAlignment="Top" FlowDirection="RightToLeft" />
+        <Label x:Name="labelVersion" Content="{x:Static prop:Strings.version}" HorizontalAlignment="Left" Margin="0,24,0,0" VerticalAlignment="Top" FontSize="10" Foreground="White" HorizontalContentAlignment="Right" Width="149"/>
         <Button Name="buttonZerone" VerticalAlignment="Top" Height="53" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="buttonZerone_Click" Margin="0,147,0,0" >
             <ContentControl>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -104,6 +105,6 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name="buttonHelp" Content="Help" HorizontalAlignment="Left" Margin="152,120,0,0" VerticalAlignment="Top" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="buttonHelp_Click"/>
+        <Button x:Name="buttonHelp" Content="{x:Static prop:Strings.help}" HorizontalAlignment="Left" Margin="152,120,0,0" VerticalAlignment="Top" Width="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="buttonHelp_Click"/>
     </Grid>
 </Window>

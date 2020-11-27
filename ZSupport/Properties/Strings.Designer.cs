@@ -22,24 +22,24 @@ namespace ZSupport.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Strings() {
         }
         
         /// <summary>
         ///   이 클래스에서 사용하는 캐시된 ResourceManager 인스턴스를 반환합니다.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ZSupport.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ZSupport.Properties.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,12 +51,77 @@ namespace ZSupport.Properties {
         ///   재정의합니다.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Z서포트를 시작합니다! 취소 &apos;ESC&apos;과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string ESC {
+            get {
+                return ResourceManager.GetString("ESC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   도움말과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string help {
+            get {
+                return ResourceManager.GetString("help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   README과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string readme {
+            get {
+                return ResourceManager.GetString("readme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   감소[-] X / 증가[+] C과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string support_plus_minus {
+            get {
+                return ResourceManager.GetString("support_plus_minus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   버전과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string version {
+            get {
+                return ResourceManager.GetString("version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   끝 점에서
+        ///&apos;Z&apos; 키를 눌러주세요과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Zend {
+            get {
+                return ResourceManager.GetString("Zend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   시작 점에서
+        ///&apos;Z&apos; 키를 눌러주세요과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Zstart {
+            get {
+                return ResourceManager.GetString("Zstart", resourceCulture);
             }
         }
     }

@@ -69,6 +69,10 @@ namespace ZSupport
         // Z키 처음클릭인가?
         private bool isFirstClick = true;
 
+        // Z키 마지막클릭인가?
+        private bool isLastClick = false;
+
+
         // 직선방정식용
         private double x1 = 0;
         private double x2 = 0;
@@ -214,6 +218,23 @@ namespace ZSupport
                         inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
                     }));
                 }
+                if (e.KeyData == Keys.U)
+                {
+                    if (isLastClick == true)
+                    {
+                        BlockInput(true);
+                        Dispatcher.BeginInvoke(new Action(delegate ()
+                        {
+                            for (int i = 0; i < int.Parse(interval.Text); i++)
+                            {
+                                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
+                                Thread.Sleep(1);
+                            }
+                        }));
+                        BlockInput(false);
+                        isLastClick = false;
+                    }
+                }
                 if (isPlaying == false)
                 {
                     Console.WriteLine(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
@@ -287,6 +308,7 @@ namespace ZSupport
                                 BlockInput(false);
                                 isPlaying = false;
                                 isFirstClick = true;
+                                isLastClick = true;
                             }));
                         }
                         labelStart.Content = Strings.Zstart;
@@ -349,10 +371,15 @@ namespace ZSupport
                         inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
                     }));
                 }
+                if (e.Button == MouseButtons.Left)
+                {
+                    isLastClick = false;
+                }
             }
             else
             {
                 isFirstClick = true;
+                isLastClick = false;
                 Zstart.IsOpen = false;
             }
         }

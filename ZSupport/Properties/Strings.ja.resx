@@ -123,6 +123,9 @@
   <data name="help" xml:space="preserve">
     <value>ヘルプ</value>
   </data>
+  <data name="isRun" xml:space="preserve">
+    <value>ZSupportツールはすでに実行されています。</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README.ja.md</value>
   </data>
@@ -135,6 +138,9 @@
   <data name="Zend" xml:space="preserve">
     <value>終了位置で
 'Z' キーを押します</value>
+  </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] 元に戻す / [R] リサポート</value>
   </data>
   <data name="Zstart" xml:space="preserve">
     <value>開始位置で

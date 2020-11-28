@@ -123,6 +123,9 @@
   <data name="help" xml:space="preserve">
     <value>救命</value>
   </data>
+  <data name="isRun" xml:space="preserve">
+    <value>ZSupport Tool已经在运行。</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README.zh-Hans</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="Zend" xml:space="preserve">
     <value>在结束位置按 'Z' 键</value>
+  </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] 撤消 / [R] 重新支持</value>
   </data>
   <data name="Zstart" xml:space="preserve">
     <value>在开始位置按 'Z' 键</value>

@@ -164,6 +164,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DpiConverter.cs" />
+    <Compile Include="LinearEquation.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -183,9 +185,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Strings.ko-KR.resx" />
     <EmbeddedResource Include="Properties\Strings.zh-Hans.resx" />
     <EmbeddedResource Include="Properties\Strings.ja.resx" />
-    <EmbeddedResource Include="Properties\Strings.en-US.resx" />
     <EmbeddedResource Include="Properties\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>

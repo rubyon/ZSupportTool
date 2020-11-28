@@ -136,6 +136,9 @@
     <value>Press 'Z' key at
 the end position</value>
   </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] Undo / [R] ReSupport</value>
+  </data>
   <data name="Zstart" xml:space="preserve">
     <value>Press 'Z' key at
 the start position</value>

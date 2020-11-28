@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
@@ -14,9 +15,6 @@ using System.Windows.Threading;
 using WindowsHook;
 using WindowsInput;
 using ZSupport.Properties;
-using System.Globalization;
-
-
 using Application = System.Windows.Application;
 using KeyEventArgs = WindowsHook.KeyEventArgs;
 using KeyPressEventArgs = WindowsHook.KeyPressEventArgs;
@@ -63,21 +61,17 @@ namespace ZSupport
 
         private IKeyboardMouseEvents m_Events;
 
-        // 서포터 추가 작업중인가?
-        public static bool isPlaying = false;
-
-        // Z키 처음클릭인가?
-        private bool isFirstClick = true;
-
-        // Z키 마지막클릭인가?
-        private bool isLastClick = false;
-
+        public static bool isPlaying = false;   // 서포트 생성중인가?
+        private bool isFirstClick = true;       // Z키 처음클릭인가?
+        private bool isLastClick = false;       // Z키 마지막클릭인가?
+        private int oldInterval = 0;            // 직전에 생성한 서포트 갯수 (Undo 용)
 
         // 직선방정식용
         private double x1 = 0;
         private double x2 = 0;
         private double y1 = 0;
         private double y2 = 0;
+        private string tooltipStatus = "";
 
         // 키보드&마우스 컨트롤용
         private InputSimulator inputSimulator = new InputSimulator();
@@ -192,25 +186,32 @@ namespace ZSupport
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
+            //Console.WriteLine(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
             if (GetActiveWindowTitle() != null && GetActiveWindowTitle().Contains("CHITUBOX"))
             {
+                //취소 ESC
                 if (e.KeyData == Keys.Escape)
                 {
                     isFirstClick = true;
+                    isLastClick = false;
                     this.Zstart.IsOpen = false;
                 }
+                //서포터 갯수 감소 X
                 if (e.KeyData == Keys.X)
                 {
                     interval.Text = (int.Parse(interval.Text) - 1).ToString();
-                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
+                    if (int.Parse(interval.Text) >= 2)
+                    {
+                        tbZstart.Text = Regex.Replace(tbZstart.Text.ToString(), @"[0-9]+", int.Parse(interval.Text).ToString());
+                    }
                 }
+                //서포터 갯수 증가 C
                 if (e.KeyData == Keys.C)
                 {
                     interval.Text = (int.Parse(interval.Text) + 1).ToString();
-                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
-
+                    tbZstart.Text = Regex.Replace(tbZstart.Text.ToString(), @"[0-9]+", int.Parse(interval.Text).ToString());
                 }
+                //서포터삭제 S
                 if (e.KeyData == Keys.S)
                 {
                     Dispatcher.BeginInvoke(new Action(delegate ()
@@ -220,6 +221,7 @@ namespace ZSupport
                         inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
                     }));
                 }
+                //서포터 생성 취소
                 if (e.KeyData == Keys.U)
                 {
                     if (isLastClick == true)
@@ -227,7 +229,7 @@ namespace ZSupport
                         BlockInput(true);
                         Dispatcher.BeginInvoke(new Action(delegate ()
                         {
-                            for (int i = 0; i < int.Parse(interval.Text); i++)
+                            for (int i = 0; i < oldInterval; i++)
                             {
                                 inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
                                 Thread.Sleep(1);
@@ -235,19 +237,92 @@ namespace ZSupport
                         }));
                         BlockInput(false);
                         isLastClick = false;
+                        this.Zstart.IsOpen = false;
                     }
                 }
+                //서포터 갯수 변경후 다시 생성
+                if (e.KeyData == Keys.R)
+                {
+                    if (isLastClick == true)   // 두번쨰 Z 클릭 상태일때 실행
+                    {
+                        Dispatcher.BeginInvoke(new Action(delegate ()
+                        {
+                            this.Zstart.IsOpen = false;
+
+                            BlockInput(true);
+
+                            for (int i = 0; i < oldInterval; i++)
+                            {
+                                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
+                                Thread.Sleep(1);
+                            }
+                            Thread.Sleep(500);
+                            
+                            double dX = (x2 - x1);
+                            double dY = (y2 - y1);
+                            
+                            List<Point> xys = new List<Point>();
+                            
+                            oldInterval = int.Parse(interval.Text.ToString());
+                            
+                            if (dX != 0)
+                            {
+                                double stepX = (x2 - x1) / ((double)oldInterval - 1);
+                                for (int i = 0; i < oldInterval; i++)
+                                {
+                                    double x = x1 + stepX * i;
+                                    double y = getY(x1, y1, x2, y2, x);
+                                    xys.Add(new Point() { X = (int)x, Y = (int)y });
+                                }
+                            }
+                            else if (dY != 0)
+                            {
+                                double stepY = (y2 - y1) / ((double)oldInterval - 1);
+                                for (int i = 0; i < oldInterval; i++)
+                                {
+                                    double y = y1 + stepY * i;
+                                    double x = getX(x1, y1, x2, y2, y);
+                                    xys.Add(new Point() { X = (int)x, Y = (int)y });
+                                }
+                            }
+
+                            Point firstP = xys[0];
+                            
+                            SetCursorPos((int)firstP.X, (int)firstP.Y);
+                            
+                            Thread.Sleep(300);
+                            
+                            for (int i = 0; i < xys.Count; i++)
+                            {
+                                Point p = xys[i];
+                                SetCursorPos((int)p.X, (int)p.Y);
+                                Thread.Sleep(150);
+                                inputSimulator.Mouse.LeftButtonClick();
+                            }
+                            
+                            BlockInput(false);
+                            
+                            isPlaying = false;
+                            isFirstClick = true;
+                            isLastClick = true;
+                            tooltipStatus = "option";
+                            this.Zstart.IsOpen = true;
+                        }));
+                    }
+                }
+
                 if (isPlaying == false)
                 {
-                    Console.WriteLine(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
+                    //Console.WriteLine(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
                     Point pos = GetMousePosition();
 
                     if (e.KeyData == Keys.Z && isFirstClick == true)
                     {
                         this.Zstart.IsOpen = true;
+                        tooltipStatus = "esc";
+                        tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
                         isFirstClick = false;
-                        Console.WriteLine("Start " + string.Format("x={0:0000}; y={1:0000}\n", pos.X, pos.Y));
-                        labelStart.Content = Strings.Zend;
+                        //Console.WriteLine("Start " + string.Format("x={0:0000}; y={1:0000}\n", pos.X, pos.Y));
                         x1 = pos.X;
                         y1 = pos.Y;
                     }
@@ -255,7 +330,7 @@ namespace ZSupport
                     {
                         this.Zstart.IsOpen = false;
                         isPlaying = true;
-                        Console.WriteLine("End " + string.Format("x={0:0000}; y={1:0000}\n", pos.X, pos.Y));
+                        //Console.WriteLine("End " + string.Format("x={0:0000}; y={1:0000}\n", pos.X, pos.Y));
 
                         x2 = pos.X;
                         y2 = pos.Y;
@@ -265,10 +340,12 @@ namespace ZSupport
 
                         List<Point> xys = new List<Point>();
 
+                        oldInterval = int.Parse(interval.Text.ToString());
+
                         if (dX != 0)
                         {
-                            double stepX = (x2 - x1) / (double.Parse(interval.Text) - 1);
-                            for (int i = 0; i < int.Parse(interval.Text); i++)
+                            double stepX = (x2 - x1) / ((double)oldInterval - 1);
+                            for (int i = 0; i < oldInterval; i++)
                             {
                                 double x = x1 + stepX * i;
                                 double y = getY(x1, y1, x2, y2, x);
@@ -277,8 +354,8 @@ namespace ZSupport
                         }
                         else if (dY != 0)
                         {
-                            double stepY = (y2 - y1) / (double.Parse(interval.Text) - 1);
-                            for (int i = 0; i < int.Parse(interval.Text); i++)
+                            double stepY = (y2 - y1) / ((double)oldInterval - 1);
+                            for (int i = 0; i < oldInterval; i++)
                             {
                                 double y = y1 + stepY * i;
                                 double x = getX(x1, y1, x2, y2, y);
@@ -301,8 +378,6 @@ namespace ZSupport
                                 for (int i = 0; i < xys.Count; i++)
                                 {
                                     Point p = xys[i];
-                                    string msg = string.Format("\t{0,3} ==> X[{1,10}], Y[{2,10}]\n", i, p.X, p.Y);
-                                    Console.WriteLine(msg);
                                     SetCursorPos((int)p.X, (int)p.Y);
                                     Thread.Sleep(150);
                                     inputSimulator.Mouse.LeftButtonClick();
@@ -311,9 +386,10 @@ namespace ZSupport
                                 isPlaying = false;
                                 isFirstClick = true;
                                 isLastClick = true;
+                                tooltipStatus = "option";
+                                this.Zstart.IsOpen = true;
                             }));
                         }
-                        labelStart.Content = Strings.Zstart;
                     }
                 }
             }
@@ -357,7 +433,18 @@ namespace ZSupport
             double realY = PixelsToPoints((int)pos.Y, LengthDirection.Vertical);
             this.Zstart.HorizontalOffset = realX + 12;
             this.Zstart.VerticalOffset = realY + 12;
-            tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString() , Strings.ESC);
+
+            Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                if (tooltipStatus == "esc")
+                {
+                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
+                }
+                else if (tooltipStatus == "option")
+                    {
+                    tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ZendOption);
+                }
+            }));
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -376,6 +463,7 @@ namespace ZSupport
                 if (e.Button == MouseButtons.Left)
                 {
                     isLastClick = false;
+                    Zstart.IsOpen = false;
                 }
             }
             else

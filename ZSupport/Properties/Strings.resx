@@ -136,6 +136,9 @@
     <value>끝 점에서
 'Z' 키를 눌러주세요</value>
   </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] 취소 / [R] 서포트 다시 생성</value>
+  </data>
   <data name="Zstart" xml:space="preserve">
     <value>시작 점에서
 'Z' 키를 눌러주세요</value>

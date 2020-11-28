@@ -116,6 +116,15 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
+        ///   [U] 취소 / [R] 서포트 다시 생성과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string ZendOption {
+            get {
+                return ResourceManager.GetString("ZendOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   시작 점에서
         ///&apos;Z&apos; 키를 눌러주세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>

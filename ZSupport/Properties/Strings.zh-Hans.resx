@@ -135,6 +135,9 @@
   <data name="Zend" xml:space="preserve">
     <value>在结束位置按 'Z' 键</value>
   </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] 撤消 / [R] 重新支持</value>
+  </data>
   <data name="Zstart" xml:space="preserve">
     <value>在开始位置按 'Z' 键</value>
   </data>

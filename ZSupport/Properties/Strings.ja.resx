@@ -136,6 +136,9 @@
     <value>終了位置で
 'Z' キーを押します</value>
   </data>
+  <data name="ZendOption" xml:space="preserve">
+    <value>[U] 元に戻す / [R] リサポート</value>
+  </data>
   <data name="Zstart" xml:space="preserve">
     <value>開始位置で
 'Z' キーを押します</value>

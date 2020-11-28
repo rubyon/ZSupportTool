@@ -123,6 +123,9 @@
   <data name="help" xml:space="preserve">
     <value>ヘルプ</value>
   </data>
+  <data name="isRun" xml:space="preserve">
+    <value>ZSupportツールはすでに実行されています。</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README.ja.md</value>
   </data>

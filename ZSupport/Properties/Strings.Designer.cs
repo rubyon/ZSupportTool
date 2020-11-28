@@ -61,7 +61,7 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   Z서포트를 시작합니다! 취소 &apos;ESC&apos;과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ZSupport Started! Cancel &apos;ESC&apos;과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string ESC {
             get {
@@ -70,11 +70,20 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   도움말과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Help과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string help {
             get {
                 return ResourceManager.GetString("help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ZSupport Tool is already running.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string isRun {
+            get {
+                return ResourceManager.GetString("isRun", resourceCulture);
             }
         }
         
@@ -88,7 +97,7 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   감소[-] X / 증가[+] C과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Decrease[-] X / Increase[+] C과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string support_plus_minus {
             get {
@@ -97,7 +106,7 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   버전과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Version과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string version {
             get {
@@ -106,8 +115,8 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   끝 점에서
-        ///&apos;Z&apos; 키를 눌러주세요과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Press &apos;Z&apos; key at
+        ///the end position과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Zend {
             get {
@@ -116,7 +125,7 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   [U] 취소 / [R] 서포트 다시 생성과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   [U] Undo / [R] ReSupport과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string ZendOption {
             get {
@@ -125,8 +134,8 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
-        ///   시작 점에서
-        ///&apos;Z&apos; 키를 눌러주세요과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Press &apos;Z&apos; key at
+        ///the start position과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Zstart {
             get {

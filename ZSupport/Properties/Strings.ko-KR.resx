@@ -118,29 +118,32 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ESC" xml:space="preserve">
-    <value>ZSupport Started! Cancel 'ESC'</value>
+    <value>Z서포트를 시작합니다! 취소 'ESC'</value>
   </data>
   <data name="help" xml:space="preserve">
-    <value>Help</value>
+    <value>도움말</value>
+  </data>
+  <data name="isRun" xml:space="preserve">
+    <value>ZSupport Tool 이 이미 실행 중입니다.</value>
   </data>
   <data name="readme" xml:space="preserve">
-    <value>README.en-US</value>
+    <value>README.ko-KR</value>
   </data>
   <data name="support_plus_minus" xml:space="preserve">
-    <value>Decrease[-] X / Increase[+] C</value>
+    <value>감소[-] X / 증가[+] C</value>
   </data>
   <data name="version" xml:space="preserve">
-    <value>Version</value>
+    <value>버전</value>
   </data>
   <data name="Zend" xml:space="preserve">
-    <value>Press 'Z' key at
-the end position</value>
+    <value>끝 점에서
+'Z' 키를 눌러주세요</value>
   </data>
   <data name="ZendOption" xml:space="preserve">
-    <value>[U] Undo / [R] ReSupport</value>
+    <value>[U] 취소 / [R] 서포트 다시 생성</value>
   </data>
   <data name="Zstart" xml:space="preserve">
-    <value>Press 'Z' key at
-the start position</value>
+    <value>시작 점에서
+'Z' 키를 눌러주세요</value>
   </data>
 </root>

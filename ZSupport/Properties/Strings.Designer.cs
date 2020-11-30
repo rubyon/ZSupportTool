@@ -88,6 +88,15 @@ namespace ZSupport.Properties {
         }
         
         /// <summary>
+        ///   Program is running.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string overlap {
+            get {
+                return ResourceManager.GetString("overlap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   README과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string readme {

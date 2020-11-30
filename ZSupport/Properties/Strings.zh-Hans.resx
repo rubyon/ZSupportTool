@@ -126,6 +126,9 @@
   <data name="isRun" xml:space="preserve">
     <value>ZSupport Tool已经在运行。</value>
   </data>
+  <data name="overlap" xml:space="preserve">
+    <value>程序正在运行。</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README.zh-Hans</value>
   </data>

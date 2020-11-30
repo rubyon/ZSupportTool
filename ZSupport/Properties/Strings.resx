@@ -126,6 +126,9 @@
   <data name="isRun" xml:space="preserve">
     <value>ZSupport Tool is already running.</value>
   </data>
+  <data name="overlap" xml:space="preserve">
+    <value>Program is running.</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README</value>
   </data>

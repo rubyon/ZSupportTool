@@ -113,7 +113,7 @@ namespace ZSupport
             SubscribeGlobal();
 
             // 자동업데이트 용
-            AutoUpdater.Start("http://3dpinside.com/publish/zsupport.xml");
+            AutoUpdater.Start("https://raw.githubusercontent.com/rubyon/zsupport/main/zsupport.xml");
 
             // 프로그램 시작 위치 X & Y 값 + 10
             WindowStartupLocation = WindowStartupLocation.Manual;
@@ -526,7 +526,7 @@ namespace ZSupport
 
         {
             AutoUpdater.ReportErrors = true;
-            AutoUpdater.Start("http://3dpinside.com/publish/zsupport.xml");
+            AutoUpdater.Start("https://raw.githubusercontent.com/rubyon/zsupport/main/zsupport.xml");
         }
 
         private void buttonHelp_Click(object sender, RoutedEventArgs e)

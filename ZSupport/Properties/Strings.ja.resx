@@ -126,6 +126,9 @@
   <data name="isRun" xml:space="preserve">
     <value>ZSupportツールはすでに実行されています。</value>
   </data>
+  <data name="overlap" xml:space="preserve">
+    <value>プログラムが実行されています。</value>
+  </data>
   <data name="readme" xml:space="preserve">
     <value>README.ja.md</value>
   </data>

@@ -62,6 +62,7 @@ namespace ZSupport
         public static bool isPlaying = false;   // 서포트 생성중인가?
         private bool isFirstClick = true;       // Z키 처음클릭인가?
         private bool isLastClick = false;       // Z키 마지막클릭인가?
+        private bool isBottom = false;          // B키를 눌렀는가?
         private int oldInterval = 0;            // 직전에 생성한 서포트 갯수 (Undo 용)
 
         // 직선방정식용
@@ -102,7 +103,7 @@ namespace ZSupport
             Title = "ZSupport Tool";
             if (FindWindow(null, Title) > 1)
             {
-                MessageBox.Show("AAA");
+                MessageBox.Show(Strings.overlap);
 
                 Close();
             }
@@ -243,6 +244,27 @@ namespace ZSupport
                             isLastClick = false;
                             Zstart.IsOpen = false;
                         }
+                    }));
+                }
+                if (e.KeyData == Keys.B)
+                {
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        isBottom = true;
+                        BlockInput(true);
+                        Point pos = GetMousePosition();
+                        SetCursorPos((int)pos.X - 100, (int)pos.Y);
+                        Thread.Sleep(100);
+                        Point pos2 = GetMousePosition();
+                        SetCursorPos((int)pos2.X, (int)pos2.Y + 360);
+                        Thread.Sleep(100);
+                        inputSimulator.Mouse.RightButtonDown();
+                        SetCursorPos((int)pos2.X, (int)pos2.Y);
+                        inputSimulator.Mouse.RightButtonUp();
+                        Thread.Sleep(100);
+                        SetCursorPos((int)pos.X, (int)pos.Y);
+                        BlockInput(false);
+                        isBottom = false;
                     }));
                 }
                 //서포터 갯수 변경후 다시 생성
@@ -405,23 +427,7 @@ namespace ZSupport
             //Console.WriteLine(string.Format("KeyUp  \t\t {0}\n", e.KeyCode));
             if (isChituboxWindow())
             {
-                if (e.KeyData == Keys.B)
-                {
-                    Dispatcher.BeginInvoke(new Action(delegate ()
-                    {
-                        BlockInput(true);
-                        Point pos = GetMousePosition();
-                        SetCursorPos((int)pos.X - 100, (int)pos.Y);
-                        Thread.Sleep(100);
-                        Point pos2 = GetMousePosition();
-                        SetCursorPos((int)pos2.X, (int)pos2.Y + 360);
-                        Thread.Sleep(100);
-                        inputSimulator.Mouse.RightButtonDown();
-                        SetCursorPos((int)pos2.X, (int)pos2.Y);
-                        inputSimulator.Mouse.RightButtonUp();
-                        BlockInput(false);
-                    }));
-                }
+
             }
         }
 
@@ -459,9 +465,10 @@ namespace ZSupport
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
+
             if (isChituboxWindow())
             {
-                if (e.Button == MouseButtons.Right)
+                if (e.Button == MouseButtons.Right && isBottom == false)
                 {
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
@@ -470,7 +477,7 @@ namespace ZSupport
                         inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
                     }));
                 }
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left && isBottom == false)
                 {
                     isLastClick = false;
                     Zstart.IsOpen = false;

@@ -120,6 +120,9 @@
   <data name="ESC" xml:space="preserve">
     <value>Z서포트를 시작합니다! 취소 'ESC'</value>
   </data>
+  <data name="FreeDraw" xml:space="preserve">
+    <value>자유곡선그리기를 시작합니다! 취소 'ESC'</value>
+  </data>
   <data name="help" xml:space="preserve">
     <value>도움말</value>
   </data>

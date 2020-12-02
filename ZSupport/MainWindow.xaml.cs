@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -62,14 +63,20 @@ namespace ZSupport
         public static bool isPlaying = false;   // 서포트 생성중인가?
         private bool isFirstClick = true;       // Z키 처음클릭인가?
         private bool isLastClick = false;       // Z키 마지막클릭인가?
-        private bool isBottom = false;          // B키를 눌렀는가?
+        private bool isQFirstClick = true;       // Q키 처음클릭인가?
+        private bool isQLastClick = false;       // Q키 마지막클릭인가?
+        private bool isBottom = false;          // B키를 눌렀는가? (바텀뷰)
+        private bool isFreeDraw = false;        // Q키를 눌렀는가? (프리드로우)
         private int oldInterval = 0;            // 직전에 생성한 서포트 갯수 (Undo 용)
+        private int qOldInterval = 0;
 
         // 직선방정식용
         private double x1 = 0;
         private double x2 = 0;
         private double y1 = 0;
         private double y2 = 0;
+        private List<Point> freeDrawPoint = new List<Point>();
+        private List<Point> newFreeDrawPoint = new List<Point>();
 
         // 툴팁 상태
         private string tooltipStatus = "";
@@ -113,7 +120,7 @@ namespace ZSupport
             SubscribeGlobal();
 
             // 자동업데이트 용
-            AutoUpdater.Start("http://3dpinside.com/publish/zsupport.xml");
+            AutoUpdater.Start("https://raw.githubusercontent.com/rubyon/zsupport/main/zsupport.xml");
 
             // 프로그램 시작 위치 X & Y 값 + 10
             WindowStartupLocation = WindowStartupLocation.Manual;
@@ -197,6 +204,7 @@ namespace ZSupport
                 {
                     isFirstClick = true;
                     isLastClick = false;
+                    isFreeDraw = false;
                     Zstart.IsOpen = false;
                 }
                 //서포터 갯수 감소 X
@@ -229,19 +237,31 @@ namespace ZSupport
                 {
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
-                        if (isLastClick == true)
+                        if (isLastClick == true || isQLastClick == true)
                         {
                             BlockInput(true);
 
-                            for (int i = 0; i < oldInterval; i++)
+                            if (isLastClick == true)
                             {
-                                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
-                                Thread.Sleep(1);
+                                for (int i = 0; i < oldInterval; i++)
+                                {
+                                    inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
+                                    Thread.Sleep(1);
+                                }
+                                isLastClick = false;
                             }
 
+                            if (isQLastClick == true)
+                            {
+                                for (int i = 0; i < qOldInterval; i++)
+                                {
+                                    inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
+                                    Thread.Sleep(1);
+                                }
+                                qOldInterval = 0;
+                                isQLastClick = false;
+                            }
                             BlockInput(false);
-
-                            isLastClick = false;
                             Zstart.IsOpen = false;
                         }
                     }));
@@ -267,15 +287,124 @@ namespace ZSupport
                         isBottom = false;
                     }));
                 }
+                if (e.KeyData == Keys.Q)
+                {
+                    if (isFreeDraw == false)
+                    {
+                        isFirstClick = true;
+                        isLastClick = false;
+
+                        isQFirstClick = true;
+                        isQLastClick = false;
+
+                        isFreeDraw = true;
+
+                        tooltipStatus = "freedraw";
+                        tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.FreeDraw);
+                        Zstart.IsOpen = true;
+                    }
+                    else
+                    {
+                        isQFirstClick = false;
+                        isQLastClick = true;
+                        Dispatcher.BeginInvoke(new Action(delegate ()
+                        {
+                            newFreeDrawPoint = new List<Point>();
+
+                            freeDrawPoint = freeDrawPoint.Distinct().ToList();
+
+                            for (int i = 0; i < freeDrawPoint.Count; i++)
+                            {
+                                Point p = freeDrawPoint[i];
+                                if (i == 0)
+                                {
+                                }
+                                else if (i == 1)
+                                {
+                                    newFreeDrawPoint.Add(new Point() { X = p.X, Y = p.Y });
+                                }
+                                else
+                                {
+                                    double x1 = freeDrawPoint[i - 1].X;
+                                    double y1 = freeDrawPoint[i - 1].Y;
+
+                                    double x2 = freeDrawPoint[i].X;
+                                    double y2 = freeDrawPoint[i].Y;
+
+                                    double dX = (x2 - x1);
+                                    double dY = (y2 - y1);
+
+                                    int drawInterval = 100;
+
+                                    if (dX != 0)
+                                    {
+                                        double stepX = (x2 - x1) / ((double)drawInterval - 1);
+                                        for (int j = 0; j < drawInterval; j++)
+                                        {
+                                            double x = x1 + stepX * j;
+                                            double y = LinearEquation.getY(x1, y1, x2, y2, x);
+                                            newFreeDrawPoint.Add(new Point() { X = (int)x, Y = (int)y });
+                                        }
+                                    }
+                                    else if (dY != 0)
+                                    {
+                                        double stepY = (y2 - y1) / ((double)drawInterval - 1);
+                                        for (int k = 0; k < drawInterval; k++)
+                                        {
+                                            double y = y1 + stepY * k;
+                                            double x = LinearEquation.getX(x1, y1, x2, y2, y);
+                                            newFreeDrawPoint.Add(new Point() { X = (int)x, Y = (int)y });
+                                        }
+                                    }
+                                }
+                            }
+
+                            BlockInput(true);
+                            newFreeDrawPoint = newFreeDrawPoint.Distinct().ToList();
+                            Thread.Sleep(150);
+                            try
+                            {
+                                SetCursorPos((int)newFreeDrawPoint[0].X, (int)newFreeDrawPoint[0].Y);
+                            }
+                            catch
+                            {
+                                isFreeDraw = false;
+                                Zstart.IsOpen = false;
+                                freeDrawPoint = new List<Point>();
+                                BlockInput(false);
+                            }
+                            Thread.Sleep(150);
+
+
+
+                            int intervalCount = newFreeDrawPoint.Count() / (int.Parse(interval.Text.ToString()) - 1 );
+
+
+                            for (int i = 0; i < newFreeDrawPoint.Count; i = i + intervalCount)
+                            {
+                                qOldInterval++;
+                                SetCursorPos((int)newFreeDrawPoint[i].X, (int)newFreeDrawPoint[i].Y);
+                                Thread.Sleep(150);
+                                inputSimulator.Mouse.LeftButtonClick();
+                            }
+
+                            isFreeDraw = false;
+                            tooltipStatus = "option";
+                            Zstart.IsOpen = true;
+                            freeDrawPoint = new List<Point>();
+                            BlockInput(false);
+                        }));
+                    }
+                }
                 //서포터 갯수 변경후 다시 생성
                 if (e.KeyData == Keys.R)
                 {
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
+                        BlockInput(true);
+
                         if (isLastClick == true)   // 두번쨰 Z 클릭 상태일때 실행
                         {
-                            BlockInput(true);
-
                             Zstart.IsOpen = false;
 
                             for (int i = 0; i < oldInterval; i++)
@@ -283,6 +412,7 @@ namespace ZSupport
                                 inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
                                 Thread.Sleep(1);
                             }
+
                             Thread.Sleep(500);
 
                             double dX = (x2 - x1);
@@ -295,6 +425,7 @@ namespace ZSupport
                             if (dX != 0)
                             {
                                 double stepX = (x2 - x1) / ((double)oldInterval - 1);
+
                                 for (int i = 0; i < oldInterval; i++)
                                 {
                                     double x = x1 + stepX * i;
@@ -305,6 +436,7 @@ namespace ZSupport
                             else if (dY != 0)
                             {
                                 double stepY = (y2 - y1) / ((double)oldInterval - 1);
+
                                 for (int i = 0; i < oldInterval; i++)
                                 {
                                     double y = y1 + stepY * i;
@@ -327,14 +459,51 @@ namespace ZSupport
                                 inputSimulator.Mouse.LeftButtonClick();
                             }
 
-                            BlockInput(false);
-
-                            isPlaying = false;
                             isFirstClick = true;
                             isLastClick = true;
-                            tooltipStatus = "option";
-                            Zstart.IsOpen = true;
                         }
+                        
+                        if (isQLastClick == true)   // 두번쨰 Q 클릭 상태일때 실행
+                        {
+                            Zstart.IsOpen = false;
+
+                            for (int i = 0; i < qOldInterval; i++)
+                            {
+                                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.CONTROL, WindowsInput.Native.VirtualKeyCode.VK_Z);
+                                Thread.Sleep(1);
+                            }
+
+                            Thread.Sleep(500);
+
+                            SetCursorPos((int)newFreeDrawPoint[0].X, (int)newFreeDrawPoint[0].Y);
+
+                            Thread.Sleep(150);
+
+                            qOldInterval = 0;
+
+                            int intervalCount = newFreeDrawPoint.Count() / (int.Parse(interval.Text.ToString()) - 1);
+
+
+                            for (int i = 0; i < newFreeDrawPoint.Count; i = i + intervalCount)
+                            {
+                                qOldInterval++;
+
+                                SetCursorPos((int)newFreeDrawPoint[i].X, (int)newFreeDrawPoint[i].Y);
+
+                                Thread.Sleep(150);
+
+                                inputSimulator.Mouse.LeftButtonClick();
+                            }
+
+                            isQFirstClick = true;
+                            isQLastClick = true;
+                        }
+
+                        tooltipStatus = "option";
+                        Zstart.IsOpen = true;
+                        isPlaying = false;
+
+                        BlockInput(false);
                     }));
                 }
 
@@ -345,6 +514,10 @@ namespace ZSupport
 
                     if (e.KeyData == Keys.Z && isFirstClick == true)
                     {
+                        isQFirstClick = true;
+                        isQLastClick = false;
+                        isFreeDraw = false;
+
                         Zstart.IsOpen = true;
                         tooltipStatus = "esc";
                         tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ESC);
@@ -457,10 +630,22 @@ namespace ZSupport
                     case "option":
                         tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.ZendOption);
                         break;
+                    case "freedraw":
+                        tbZstart.Text = String.Format("[{0}] {1}", interval.Text.ToString(), Strings.FreeDraw);
+                        break;
                     default:
                         break;
                 }
             }));
+
+            if (isFreeDraw == true)
+            {
+                Dispatcher.BeginInvoke(new Action(delegate ()
+                {
+                    Point pos = GetMousePosition();
+                    freeDrawPoint.Add(new Point() { X = pos.X, Y = pos.Y });
+                }));
+            }
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -526,7 +711,7 @@ namespace ZSupport
 
         {
             AutoUpdater.ReportErrors = true;
-            AutoUpdater.Start("http://3dpinside.com/publish/zsupport.xml");
+            AutoUpdater.Start("https://raw.githubusercontent.com/rubyon/zsupport/main/zsupport.xml");
         }
 
         private void buttonHelp_Click(object sender, RoutedEventArgs e)

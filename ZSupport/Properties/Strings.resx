@@ -120,6 +120,9 @@
   <data name="ESC" xml:space="preserve">
     <value>ZSupport Started! Cancel 'ESC'</value>
   </data>
+  <data name="FreeDraw" xml:space="preserve">
+    <value>Free draw Started! Cancel 'ESC'</value>
+  </data>
   <data name="help" xml:space="preserve">
     <value>Help</value>
   </data>

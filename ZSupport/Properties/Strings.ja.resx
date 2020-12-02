@@ -120,6 +120,9 @@
   <data name="ESC" xml:space="preserve">
     <value>ZSupportが始まりました！ 'ESC' をキャンセルする</value>
   </data>
+  <data name="FreeDraw" xml:space="preserve">
+    <value>フリースローを開始します！ 'ESC' をキャンセルする</value>
+  </data>
   <data name="help" xml:space="preserve">
     <value>ヘルプ</value>
   </data>

@@ -120,6 +120,9 @@
   <data name="ESC" xml:space="preserve">
     <value>ZSupport已开始！ 取消 'ESC'</value>
   </data>
+  <data name="FreeDraw" xml:space="preserve">
+    <value>开始免费抽奖！ 取消 'ESC'</value>
+  </data>
   <data name="help" xml:space="preserve">
     <value>救命</value>
   </data>
